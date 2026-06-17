@@ -1,0 +1,25 @@
+# Web framework
+fastapi==0.115.5
+uvicorn[standard]==0.32.1
+
+# Database
+sqlalchemy==2.0.36
+greenlet==3.1.1
+aiosqlite==0.20.0
+
+# Validation / settings
+pydantic==2.10.3
+pydantic-settings==2.6.1
+python-dotenv==1.0.1
+
+# HTTP client (async)
+httpx==0.28.0
+
+# NLP — pure-Python regex matcher, no compiled dependencies
+# (spaCy was removed: blis wheels unavailable for Python 3.8 on macOS)
+
+# Anthropic SDK
+anthropic==0.40.0
+
+# File uploads (for résumé)
+python-multipart==0.0.17
