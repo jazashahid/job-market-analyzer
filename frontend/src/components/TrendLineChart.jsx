@@ -5,6 +5,29 @@ import {
 
 const COLORS = ['#7FA882', '#C4A09D', '#A89FC0', '#C4A96E', '#82B4C8', '#A5C9B8', '#D4B4A5']
 
+function SkeletonChart() {
+  return (
+    <div className="skeleton-chart" style={{ height: 380 }}>
+      {/* Fake horizontal grid lines */}
+      {[...Array(5)].map((_, i) => (
+        <div key={i} className="skeleton skeleton-grid-line" />
+      ))}
+      {/* Fake x-axis labels */}
+      <div className="skeleton-x-labels">
+        {[70, 60, 55, 65, 50].map((w, i) => (
+          <div key={i} className="skeleton" style={{ width: w, height: 11 }} />
+        ))}
+      </div>
+      {/* Fake legend */}
+      <div style={{ display: 'flex', gap: 16, marginTop: 20 }}>
+        {[50, 62, 44].map((w, i) => (
+          <div key={i} className="skeleton" style={{ width: w, height: 11 }} />
+        ))}
+      </div>
+    </div>
+  )
+}
+
 function pivotHistory(history) {
   const byDate = {}
   const skillSet = new Set()
@@ -18,14 +41,12 @@ function pivotHistory(history) {
 }
 
 export default function TrendLineChart({ history, isLoading }) {
-  if (isLoading) {
-    return <div className="chart-placeholder">Loading…</div>
-  }
+  if (isLoading) return <SkeletonChart />
 
   if (!history.length) {
     return (
       <div className="chart-empty">
-        <span style={{ fontSize: 28, opacity: 0.3 }}>◬</span>
+        <span style={{ fontSize: 28, opacity: 0.25 }}>◬</span>
         <p>No history yet.</p>
         <p className="text-muted">Trends build as you fetch jobs across multiple days.</p>
       </div>

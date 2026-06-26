@@ -8,21 +8,9 @@ export default function Dashboard({ trendingSkills, skillHistory, totalJobs, isL
   return (
     <div>
       <div className="stat-row">
-        <StatCard
-          label="Total Jobs"
-          value={isLoading ? '…' : totalJobs.toLocaleString()}
-          accent="sage"
-        />
-        <StatCard
-          label="Top Skill"
-          value={isLoading ? '…' : topSkill}
-          accent="rose"
-        />
-        <StatCard
-          label="Skills Tracked"
-          value={isLoading ? '…' : skillsTracked}
-          accent="lavender"
-        />
+        <StatCard label="Total Jobs"     value={totalJobs.toLocaleString()} accent="sage"     isLoading={isLoading} />
+        <StatCard label="Top Skill"      value={topSkill}                   accent="rose"     isLoading={isLoading} />
+        <StatCard label="Skills Tracked" value={skillsTracked}              accent="lavender" isLoading={isLoading} />
       </div>
 
       <div className="chart-row">
@@ -39,11 +27,14 @@ export default function Dashboard({ trendingSkills, skillHistory, totalJobs, isL
   )
 }
 
-function StatCard({ label, value, accent }) {
+function StatCard({ label, value, accent, isLoading }) {
   return (
     <div className={`card stat-card stat-card--${accent}`}>
       <div className="stat-label">{label}</div>
-      <div className="stat-value">{value}</div>
+      {isLoading
+        ? <div className="skeleton" style={{ height: 30, width: '55%', marginTop: 6 }} />
+        : <div className="stat-value">{value}</div>
+      }
     </div>
   )
 }

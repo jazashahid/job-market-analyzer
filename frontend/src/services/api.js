@@ -5,8 +5,8 @@ const api = axios.create({
   timeout: 30_000,
 })
 
-export const fetchJobs = (keywords = 'software engineer', country = 'us', page = 1) =>
-  api.get('/jobs/fetch', { params: { keywords, country, page, results_per_page: 50 } })
+export const fetchJobs = (keywords = 'software engineer', country = 'us', pages = 1) =>
+  api.get('/jobs/fetch', { params: { keywords, country, pages } })
 
 export const listJobs = (page = 1, pageSize = 20) =>
   api.get('/jobs', { params: { page, page_size: pageSize } })

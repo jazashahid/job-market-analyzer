@@ -6,6 +6,7 @@ import { fetchJobs, listJobs, getTrendingSkills, getSkillHistory } from './servi
 
 export default function App() {
   const [keyword, setKeyword] = useState('software engineer')
+  const [pages, setPages] = useState(3)
   const [trendingSkills, setTrendingSkills] = useState([])
   const [skillHistory, setSkillHistory] = useState([])
   const [jobs, setJobs] = useState([])
@@ -51,7 +52,7 @@ export default function App() {
     setFetchStatus(null)
     setError(null)
     try {
-      const res = await fetchJobs(keyword.trim())
+      const res = await fetchJobs(keyword.trim(), 'us', pages)
       setFetchStatus(res.data)
       setJobPage(1)
       await Promise.all([loadDashboard(), loadJobs(1)])
@@ -87,12 +88,24 @@ export default function App() {
             onChange={e => setKeyword(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && !isFetching && handleFetch()}
           />
+          <select
+            className="input pages-select"
+            value={pages}
+            onChange={e => setPages(Number(e.target.value))}
+            disabled={isFetching}
+          >
+            <option value={1}>1 page · 50 jobs</option>
+            <option value={2}>2 pages · 100 jobs</option>
+            <option value={3}>3 pages · 150 jobs</option>
+            <option value={5}>5 pages · 250 jobs</option>
+            <option value={10}>10 pages · 500 jobs</option>
+          </select>
           <button
             className="btn btn-primary"
             onClick={handleFetch}
             disabled={isFetching || !keyword.trim()}
           >
-            {isFetching ? 'Fetching…' : 'Fetch Jobs'}
+            {isFetching ? `Fetching p${fetchStatus?.pages_fetched ?? 0 + 1}/${pages}…` : 'Fetch Jobs'}
           </button>
         </div>
       </header>
@@ -104,7 +117,8 @@ export default function App() {
           <div className="banner banner-success">
             {fetchStatus.inserted} new jobs added &nbsp;·&nbsp;
             {fetchStatus.skipped} already in DB &nbsp;·&nbsp;
-            {fetchStatus.skills_extracted} skills extracted
+            {fetchStatus.skills_extracted} skills extracted &nbsp;·&nbsp;
+            {fetchStatus.pages_fetched} page{fetchStatus.pages_fetched !== 1 ? 's' : ''} fetched
           </div>
         )}
 

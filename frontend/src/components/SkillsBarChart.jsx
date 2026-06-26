@@ -2,6 +2,22 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
 } from 'recharts'
 
+// Approximate widths descend to suggest a real ranking
+const SKELETON_WIDTHS = [88, 76, 68, 61, 55, 50, 45, 41, 37, 33]
+
+function SkeletonBars() {
+  return (
+    <div className="skeleton-bars" style={{ padding: '8px 0' }}>
+      {SKELETON_WIDTHS.map((w, i) => (
+        <div key={i} className="skeleton-bar-row">
+          <div className="skeleton skeleton-bar-label" style={{ width: 100, height: 13 }} />
+          <div className="skeleton skeleton-bar-fill" style={{ width: `${w}%` }} />
+        </div>
+      ))}
+    </div>
+  )
+}
+
 function CustomTooltip({ active, payload }) {
   if (!active || !payload?.length) return null
   return (
@@ -13,14 +29,12 @@ function CustomTooltip({ active, payload }) {
 }
 
 export default function SkillsBarChart({ skills, isLoading }) {
-  if (isLoading) {
-    return <div className="chart-placeholder">Loading…</div>
-  }
+  if (isLoading) return <SkeletonBars />
 
   if (!skills.length) {
     return (
       <div className="chart-empty">
-        <span style={{ fontSize: 28, opacity: 0.3 }}>◫</span>
+        <span style={{ fontSize: 28, opacity: 0.25 }}>◫</span>
         <p>No skills data yet.</p>
         <p className="text-muted">Fetch job listings to extract trending skills.</p>
       </div>
@@ -50,12 +64,7 @@ export default function SkillsBarChart({ skills, isLoading }) {
           tickLine={false}
         />
         <Tooltip content={<CustomTooltip />} cursor={{ fill: '#F3F0EB' }} />
-        <Bar
-          dataKey="count"
-          fill="#7FA882"
-          radius={[0, 5, 5, 0]}
-          maxBarSize={18}
-        />
+        <Bar dataKey="count" fill="#7FA882" radius={[0, 5, 5, 0]} maxBarSize={18} />
       </BarChart>
     </ResponsiveContainer>
   )
