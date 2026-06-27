@@ -42,14 +42,14 @@ export default function ResumeAnalyzer() {
     <div className="resume-grid">
       {/* ── Left: input ── */}
       <div className="card resume-input-card">
-        <div className="card-title">Your Résumé</div>
+        <div className="card-title">Your Resume</div>
         <p className="resume-hint">
-          Paste your full résumé text. Claude will compare it against the top trending skills
+          Paste your full resume text. Claude will compare it against the top trending skills
           in the job market database and identify gaps.
         </p>
         <textarea
           className="resume-textarea"
-          placeholder="Paste your résumé here…"
+          placeholder="Paste your resume here…"
           value={text}
           onChange={e => setText(e.target.value)}
         />
@@ -74,7 +74,7 @@ export default function ResumeAnalyzer() {
             <span className="result-empty-icon">◎</span>
             <p>Your skills gap report will appear here.</p>
             <p className="text-muted" style={{ fontSize: 12, maxWidth: 280 }}>
-              Fetch some job listings first, then paste your résumé and click Analyze.
+              Fetch some job listings first, then paste your resume and click Analyze.
             </p>
           </div>
         )}
@@ -123,10 +123,12 @@ function ResultPanel({ result }) {
         <p className="result-summary">{result.summary}</p>
       </div>
 
+      <hr className="result-divider" />
+
       {/* Skills you have / need */}
       <div className="skills-gap-grid">
         <div>
-          <div className="gap-label gap-label--have">✓ Skills You Have</div>
+          <div className="gap-label gap-label--have">Skills you have</div>
           <div className="skill-tags">
             {result.skills_you_have.length
               ? result.skills_you_have.map(s => (
@@ -137,7 +139,7 @@ function ResultPanel({ result }) {
           </div>
         </div>
         <div>
-          <div className="gap-label gap-label--need">✗ Skills to Develop</div>
+          <div className="gap-label gap-label--need">Skills to develop</div>
           <div className="skill-tags">
             {result.skills_you_need.slice(0, 12).map(s => (
               <span key={s} className="skill-tag skill-tag--need">{s}</span>
@@ -147,6 +149,7 @@ function ResultPanel({ result }) {
       </div>
 
       {/* Recommendations */}
+      <hr className="result-divider" style={{ marginTop: 0 }} />
       <div>
         <div className="recs-label">Recommendations</div>
         <ol className="recs-list">

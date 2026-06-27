@@ -8,17 +8,14 @@ const COLORS = ['#7FA882', '#C4A09D', '#A89FC0', '#C4A96E', '#82B4C8', '#A5C9B8'
 function SkeletonChart() {
   return (
     <div className="skeleton-chart" style={{ height: 380 }}>
-      {/* Fake horizontal grid lines */}
       {[...Array(5)].map((_, i) => (
         <div key={i} className="skeleton skeleton-grid-line" />
       ))}
-      {/* Fake x-axis labels */}
       <div className="skeleton-x-labels">
         {[70, 60, 55, 65, 50].map((w, i) => (
           <div key={i} className="skeleton" style={{ width: w, height: 11 }} />
         ))}
       </div>
-      {/* Fake legend */}
       <div style={{ display: 'flex', gap: 16, marginTop: 20 }}>
         {[50, 62, 44].map((w, i) => (
           <div key={i} className="skeleton" style={{ width: w, height: 11 }} />
@@ -40,6 +37,20 @@ function pivotHistory(history) {
   return { data, skills: [...skillSet] }
 }
 
+function CustomTooltip({ active, payload, label }) {
+  if (!active || !payload?.length) return null
+  return (
+    <div className="chart-tooltip">
+      <div className="chart-tooltip-label">{label}</div>
+      {payload.map(p => (
+        <div key={p.dataKey} className="chart-tooltip-value" style={{ color: p.color }}>
+          {p.dataKey}: {p.value}
+        </div>
+      ))}
+    </div>
+  )
+}
+
 export default function TrendLineChart({ history, isLoading }) {
   if (isLoading) return <SkeletonChart />
 
@@ -57,33 +68,28 @@ export default function TrendLineChart({ history, isLoading }) {
 
   return (
     <ResponsiveContainer width="100%" height={380}>
-      <LineChart data={data} margin={{ top: 4, right: 28, bottom: 4, left: 0 }}>
-        <CartesianGrid strokeDasharray="3 3" stroke="#EDE9E4" />
+      <LineChart data={data} margin={{ top: 12, right: 36, bottom: 28, left: 16 }}>
+        <CartesianGrid strokeDasharray="0" stroke="#F0EDE8" horizontal={true} vertical={false} />
         <XAxis
           dataKey="date"
-          tick={{ fontSize: 11, fill: '#999' }}
+          tick={{ fontSize: 10, fill: '#A0A0A0' }}
           axisLine={false}
           tickLine={false}
+          tickMargin={8}
+          label={{ value: 'Date', position: 'insideBottom', offset: -14, fontSize: 10, fill: '#A0A0A0' }}
         />
         <YAxis
-          tick={{ fontSize: 11, fill: '#999' }}
+          tick={{ fontSize: 10, fill: '#A0A0A0' }}
           axisLine={false}
           tickLine={false}
           width={32}
+          label={{ value: 'Mentions', angle: -90, position: 'insideLeft', offset: 14, fontSize: 10, fill: '#A0A0A0' }}
         />
-        <Tooltip
-          contentStyle={{
-            background: '#fff',
-            border: '1px solid #E4DDD6',
-            borderRadius: 8,
-            fontSize: 12,
-            boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
-          }}
-        />
+        <Tooltip content={<CustomTooltip />} />
         <Legend
-          wrapperStyle={{ fontSize: 11, paddingTop: 14, color: '#555' }}
+          wrapperStyle={{ fontSize: 11, paddingTop: 14, color: '#A0A0A0' }}
           iconType="circle"
-          iconSize={8}
+          iconSize={7}
         />
         {skills.map((skill, i) => (
           <Line
@@ -92,8 +98,9 @@ export default function TrendLineChart({ history, isLoading }) {
             dataKey={skill}
             stroke={COLORS[i % COLORS.length]}
             strokeWidth={2}
-            dot={{ r: 3, fill: COLORS[i % COLORS.length], strokeWidth: 0 }}
-            activeDot={{ r: 5, strokeWidth: 0 }}
+            dot={{ r: 1.5, fill: COLORS[i % COLORS.length], strokeWidth: 0 }}
+            activeDot={{ r: 4, strokeWidth: 1.5, stroke: '#fff' }}
+            connectNulls={true}
           />
         ))}
       </LineChart>

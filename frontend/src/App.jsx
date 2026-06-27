@@ -70,24 +70,25 @@ export default function App() {
 
   return (
     <div className="app">
-      <header className="header">
-        <div className="header-brand">
-          <span className="header-logo">◈</span>
-          <div>
-            <div className="header-title">Job Market Analyzer</div>
-            <div className="header-subtitle">Skill trends · Powered by Adzuna + Claude</div>
-          </div>
-        </div>
+      <div className="topbar">
+        <header className="header">
+          <span className="header-wordmark">Job Market Analyzer</span>
+        </header>
 
-        <div className="header-controls">
-          <input
-            className="input header-search"
-            type="text"
-            placeholder="Keyword (e.g. data scientist, frontend engineer)"
-            value={keyword}
-            onChange={e => setKeyword(e.target.value)}
-            onKeyDown={e => e.key === 'Enter' && !isFetching && handleFetch()}
-          />
+        <div className="toolbar">
+          <div className="search-wrap">
+            <svg className="search-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            <input
+              className="input"
+              type="text"
+              placeholder="e.g. data scientist, frontend engineer"
+              value={keyword}
+              onChange={e => setKeyword(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && !isFetching && handleFetch()}
+            />
+          </div>
           <select
             className="input pages-select"
             value={pages}
@@ -105,10 +106,10 @@ export default function App() {
             onClick={handleFetch}
             disabled={isFetching || !keyword.trim()}
           >
-            {isFetching ? `Fetching p${fetchStatus?.pages_fetched ?? 0 + 1}/${pages}…` : 'Fetch Jobs'}
+            {isFetching ? 'Fetching…' : 'Fetch Jobs'}
           </button>
         </div>
-      </header>
+      </div>
 
       <main className="main">
         {error && <div className="banner banner-error">{error}</div>}
@@ -123,7 +124,6 @@ export default function App() {
         )}
 
         <section className="section">
-          <div className="section-label">Trends</div>
           <Dashboard
             trendingSkills={trendingSkills}
             skillHistory={skillHistory}
@@ -133,7 +133,7 @@ export default function App() {
         </section>
 
         <section className="section">
-          <div className="section-label">Job Listings</div>
+          <div className="section-label">Job listings</div>
           <JobList
             jobs={jobs}
             total={totalJobs}
@@ -144,7 +144,7 @@ export default function App() {
         </section>
 
         <section className="section">
-          <div className="section-label">Resume Analyzer</div>
+          <div className="section-label">Resume analyzer</div>
           <ResumeAnalyzer />
         </section>
       </main>
