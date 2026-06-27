@@ -6,8 +6,14 @@
 
 ---
 
-![Dashboard Screenshot](screenshot-dashboard.png)
-![Resume Analyzer Screenshot](screenshot-resume.png)
+![Dashboard showing trending skills bar chart and frequency line chart](docs/dashboard.png)
+*Trending skills bar chart and day-over-day frequency line chart.*
+
+![Paginated job listings table with filter](docs/job-listings.png)
+*Paginated job table with live client-side filtering by title, company, or location.*
+
+![Resume analyzer results with match score and skills gap](docs/resume-analyzer.png)
+*Match score, skills gap breakdown, and Claude-generated recommendations.*
 
 ---
 
