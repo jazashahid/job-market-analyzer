@@ -1,8 +1,13 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+from slowapi import _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
+from starlette.requests import Request
 
 from database import init_db
+from limiter import limiter
 from routers import jobs, skills, resume
 
 
@@ -18,6 +23,18 @@ app = FastAPI(
     description="Pulls job listings from Adzuna, extracts trending skills via spaCy, and analyzes résumé gaps with Claude.",
     lifespan=lifespan,
 )
+
+app.state.limiter = limiter
+
+
+async def _json_rate_limit_handler(request: Request, exc: RateLimitExceeded) -> JSONResponse:
+    return JSONResponse(
+        status_code=429,
+        content={"error": f"Rate limit exceeded: {exc.detail}. Please wait before retrying."},
+    )
+
+
+app.add_exception_handler(RateLimitExceeded, _json_rate_limit_handler)
 
 app.add_middleware(
     CORSMiddleware,

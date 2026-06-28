@@ -1,10 +1,11 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel, Field
 from typing import List
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func
 
 from database import get_db
+from limiter import limiter
 from models.skill import Skill
 from services import anthropic_client
 
@@ -29,7 +30,9 @@ class ResumeAnalyzeResponse(BaseModel):
     response_model=ResumeAnalyzeResponse,
     summary="Analyze résumé against trending skills via Anthropic",
 )
+@limiter.limit("5/minute")
 async def analyze_resume(
+    request: Request,
     body: ResumeAnalyzeRequest,
     db: AsyncSession = Depends(get_db),
 ) -> ResumeAnalyzeResponse:
