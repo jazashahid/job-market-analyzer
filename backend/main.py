@@ -9,12 +9,15 @@ from starlette.requests import Request
 from database import init_db
 from limiter import limiter
 from routers import jobs, skills, resume
+from services.scheduler import start_scheduler, stop_scheduler
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await init_db()
+    start_scheduler()
     yield
+    stop_scheduler()
 
 
 app = FastAPI(

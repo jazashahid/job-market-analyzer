@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import Dashboard from './components/Dashboard.jsx'
 import JobList from './components/JobList.jsx'
 import ResumeAnalyzer from './components/ResumeAnalyzer.jsx'
@@ -12,10 +12,12 @@ export default function App() {
   const [jobs, setJobs] = useState([])
   const [totalJobs, setTotalJobs] = useState(0)
   const [jobPage, setJobPage] = useState(1)
+  const [roleFilter, setRoleFilter] = useState('')
   const [isLoading, setIsLoading] = useState(true)
   const [isFetching, setIsFetching] = useState(false)
   const [fetchStatus, setFetchStatus] = useState(null)
   const [error, setError] = useState(null)
+  const roleDebounceRef = useRef(null)
 
   const loadDashboard = useCallback(async () => {
     const [skillsRes, historyRes] = await Promise.all([
@@ -26,8 +28,8 @@ export default function App() {
     setSkillHistory(historyRes.data.history)
   }, [])
 
-  const loadJobs = useCallback(async (page = 1) => {
-    const res = await listJobs(page, 20)
+  const loadJobs = useCallback(async (page = 1, role = '') => {
+    const res = await listJobs(page, 20, role)
     setJobs(res.data.jobs)
     setTotalJobs(res.data.total)
   }, [])
@@ -63,9 +65,18 @@ export default function App() {
     }
   }
 
+  const handleRoleChange = (value) => {
+    setRoleFilter(value)
+    clearTimeout(roleDebounceRef.current)
+    roleDebounceRef.current = setTimeout(() => {
+      setJobPage(1)
+      loadJobs(1, value)
+    }, 400)
+  }
+
   const handlePageChange = async (newPage) => {
     setJobPage(newPage)
-    await loadJobs(newPage)
+    await loadJobs(newPage, roleFilter)
   }
 
   return (
@@ -139,6 +150,8 @@ export default function App() {
             total={totalJobs}
             page={jobPage}
             onPageChange={handlePageChange}
+            roleFilter={roleFilter}
+            onRoleChange={handleRoleChange}
             isLoading={isLoading}
           />
         </section>

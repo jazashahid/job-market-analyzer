@@ -124,6 +124,31 @@ async def test_list_jobs_returns_paginated_results(client, db_session):
     assert len(data2["jobs"]) == 2
 
 
+async def test_list_jobs_role_filter(client, db_session):
+    from models.job import Job
+
+    db_session.add(Job(adzuna_id="r1", title="Senior Python Developer", description="Python.", url="https://a.com/r1"))
+    db_session.add(Job(adzuna_id="r2", title="Frontend React Engineer", description="React.", url="https://a.com/r2"))
+    db_session.add(Job(adzuna_id="r3", title="Python Data Scientist", description="Python ML.", url="https://a.com/r3"))
+    await db_session.commit()
+
+    response = await client.get("/jobs?role=python")
+    assert response.status_code == 200
+    data = response.json()
+    assert data["total"] == 2
+    assert all("python" in j["title"].lower() for j in data["jobs"])
+
+    response2 = await client.get("/jobs?role=react")
+    data2 = response2.json()
+    assert data2["total"] == 1
+    assert "React" in data2["jobs"][0]["title"]
+
+    response3 = await client.get("/jobs?role=nonexistent_xyz")
+    data3 = response3.json()
+    assert data3["total"] == 0
+    assert data3["jobs"] == []
+
+
 async def test_list_jobs_response_shape(client, db_session):
     from models.job import Job
 

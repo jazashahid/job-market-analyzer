@@ -1,5 +1,3 @@
-import { useState } from 'react'
-
 const PAGE_SIZE = 20
 const SKELETON_ROWS = 7
 // Column widths vary to look like real data
@@ -33,17 +31,7 @@ function formatSalary(min, max) {
   return `≤ ${fmt(max)}`
 }
 
-export default function JobList({ jobs, total, page, onPageChange, isLoading }) {
-  const [filter, setFilter] = useState('')
-
-  const filtered = filter
-    ? jobs.filter(j =>
-        j.title.toLowerCase().includes(filter.toLowerCase()) ||
-        (j.company ?? '').toLowerCase().includes(filter.toLowerCase()) ||
-        (j.location ?? '').toLowerCase().includes(filter.toLowerCase())
-      )
-    : jobs
-
+export default function JobList({ jobs, total, page, onPageChange, roleFilter, onRoleChange, isLoading }) {
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE))
 
   return (
@@ -52,9 +40,9 @@ export default function JobList({ jobs, total, page, onPageChange, isLoading }) 
         <input
           className="input"
           type="text"
-          placeholder="Filter by title, company, or location…"
-          value={filter}
-          onChange={e => setFilter(e.target.value)}
+          placeholder="Filter by job title…"
+          value={roleFilter}
+          onChange={e => onRoleChange(e.target.value)}
           disabled={isLoading}
         />
         {isLoading
@@ -90,12 +78,12 @@ export default function JobList({ jobs, total, page, onPageChange, isLoading }) 
                   </div>
                 </td>
               </tr>
-            ) : filtered.length === 0 ? (
+            ) : jobs.length === 0 ? (
               <tr>
                 <td colSpan={5} className="table-empty text-muted">No jobs match that filter.</td>
               </tr>
             ) : (
-              filtered.map(job => (
+              jobs.map(job => (
                 <tr key={job.id}>
                   <td>
                     <a href={job.url} target="_blank" rel="noopener noreferrer" className="job-link">

@@ -8,8 +8,8 @@ const api = axios.create({
 export const fetchJobs = (keywords = 'software engineer', country = 'us', pages = 1) =>
   api.get('/jobs/fetch', { params: { keywords, country, pages } })
 
-export const listJobs = (page = 1, pageSize = 20) =>
-  api.get('/jobs', { params: { page, page_size: pageSize } })
+export const listJobs = (page = 1, pageSize = 20, role = '') =>
+  api.get('/jobs', { params: { page, page_size: pageSize, ...(role ? { role } : {}) } })
 
 export const getTrendingSkills = (limit = 20) =>
   api.get('/skills/trending', { params: { limit } })
