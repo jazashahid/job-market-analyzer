@@ -4,6 +4,8 @@
 
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?style=flat-square&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com) [![React](https://img.shields.io/badge/React-18-61DAFB?style=flat-square&logo=react&logoColor=black)](https://react.dev) [![Python](https://img.shields.io/badge/Python-3.8+-3776AB?style=flat-square&logo=python&logoColor=white)](https://python.org) [![SQLite](https://img.shields.io/badge/SQLite-003B57?style=flat-square&logo=sqlite&logoColor=white)](https://sqlite.org) [![Recharts](https://img.shields.io/badge/Recharts-2.x-22B5BF?style=flat-square&logo=javascript&logoColor=white)](https://recharts.org) [![Claude](https://img.shields.io/badge/Claude-Sonnet-D97706?style=flat-square)](https://anthropic.com) [![License: MIT](https://img.shields.io/badge/License-MIT-6B9E6B?style=flat-square)](LICENSE)
 
+**[Live Demo](https://job-market-analyzer-zeta.vercel.app/)**
+
 ---
 
 ![Dashboard showing trending skills bar chart and frequency line chart](docs/dashboard.png)
